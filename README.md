@@ -1,71 +1,90 @@
 # Insight.IO — ERIC Robotics Dashboard
 
-A locally hosted React dashboard concept based on the supplied Insight.IO reference screenshot and screen recording. It focuses on the full-screen robot-operator experience: a warehouse map, camera preview, mission status, operating mode, telemetry, emergency stop, and direction controls.
+A responsive robotics dashboard built with React, Vite and Three.js. The interface provides a warehouse map, a camera simulation view, a 3D point-cloud visualization and interactive mission-control elements.
 
-> **Scope note:** The UI and controls run locally as a simulation. They do not control a real robot and do not connect to a ROS bridge. The 3D map uses the included local ASCII `.pcd` sample or a user-selected ASCII `.pcd` file. ROS/ROS 2 integration can be added as a separate extension.
+**Live Demo:** https://insight-io-robotics-dashboard.vercel.app  
+**GitHub Repository:** https://github.com/Pavanrr25/insight-io-robotics-dashboard
 
-## Features
+## 1. Project Overview
 
-- Full-screen warehouse floor-map view with robot marker, mapped zones and simulated LiDAR detections.
-- Camera mode with a local looping sample video and map preview.
-- 3D point-cloud mode rendered with Three.js and the local `public/data/warehouse-scan.pcd` file.
-- Load another ASCII `.pcd` file from the browser using **Load .PCD** in 3D mode.
-- Auto / Manual mode toggle, mission pause/resume, quick-goal action and directional-pad controls.
-- Emergency stop state that pauses the mission simulation and disables movement commands.
-- Zoom slider and zoom-in / zoom-out controls in map mode.
-- Responsive layout for desktop and mobile widths.
-- No runtime web API calls are required. Install dependencies once before running locally. The CSS uses system fonts to avoid remote font dependencies.
+Insight.IO is a frontend implementation of the dashboard design provided in the ERIC Robotics assessment.
 
-## Requirements
+The project focuses on recreating the reference interface and providing interactive dashboard experiences through locally hosted assets and browser-based rendering.
 
-- Node.js 20 or newer (Node 20 LTS or Node 22 LTS recommended)
-- npm
-- A modern browser with WebGL support for the 3D point-cloud view
+The application includes three primary visualization modes:
 
-## Run locally
+- **Map View:** A simulated warehouse map with a robot marker, mapped areas and visual LiDAR-style indicators.
+- **Camera View:** A camera interface that plays a locally hosted sample video.
+- **3D Map View:** An interactive point-cloud visualization powered by Three.js, using a local `.pcd` dataset.
 
-1. Extract the project ZIP.
-2. Open a terminal in the `insight-io-dashboard` folder.
-3. Install the JavaScript dependencies:
+Mission controls, robot status and telemetry elements are frontend simulations. The current implementation does not communicate with a physical robot or a ROS/ROS2 system.
 
-   ```bash
-   npm install
-   ```
+## 2. Features
 
-4. Start the development server:
+### Dashboard and Warehouse Map
 
-   ```bash
-   npm run dev
-   ```
+- Warehouse-style dashboard interface.
+- Simulated robot position and mapped zones.
+- Map zoom controls.
+- Navigation between dashboard views.
 
-5. Open the local URL printed by Vite, normally `http://localhost:5173`.
+### Camera View
 
-To create and preview a production build:
+- Playback of a locally hosted sample video.
+- Support for selecting a local video file.
+- Play and pause controls.
+- Snapshot capture and PNG download.
+- Simulated camera overlays and status indicators.
 
-```bash
-npm run build
-npm run preview
-```
+### 3D Point-Cloud View
 
-## Controls
+- Three.js-based 3D rendering.
+- Loading of the default local PCD dataset.
+- Support for selecting another local `.pcd` file.
+- Point-cloud navigation using OrbitControls.
+- Point visualization and grid controls.
+- Camera reset and point-cloud information.
+- ASCII PCD parsing with X, Y and Z fields and optional intensity data.
 
-- **Sidebar map icon:** open the warehouse map.
-- **Sidebar scan icon:** open the interactive 3D point cloud. Drag to rotate and scroll to zoom.
-- **Sidebar camera icon** or the camera inset: open the full camera feed.
-- **Quick Goal:** add a simulated goal to the mission.
-- **AUTO / MANUAL:** switch the operator mode indicator.
-- **INITIATE / RESUME** or the pause button: pause/resume the simulated mission.
-- **Emergency STOP:** engage/release the emergency-stop simulation.
-- **Direction pad:** logs a simulated move/turn command and switches to Manual mode.
-- **Zoom controls:** change the floor-map scale.
-- **Load .PCD:** choose another local ASCII PCD file while in 3D mode.
+**Format limitation:** The current PCD parser supports ASCII PCD files. Binary and compressed PCD formats are not supported.
 
-## Project structure
+### Mission and Robot Controls
+
+- Auto and Manual mode selection.
+- Simulated mission pause and resume.
+- Emergency-stop interface state.
+- Directional control interface.
+- Quick Goal interaction.
+- Simulated status messages and telemetry.
+
+These controls demonstrate frontend interaction only. They do not send movement commands to a physical robot.
+
+### Responsive Interface
+
+- Dashboard layout designed for desktop and smaller screens.
+- Reusable React components.
+- Interactive interface elements and status indicators.
+
+## 3. Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| React 18 | Component-based UI |
+| Vite 6 | Development server and build tool |
+| JavaScript | Application logic |
+| CSS3 | Dashboard styling and responsive layout |
+| Three.js | 3D point-cloud rendering |
+| OrbitControls | 3D scene navigation |
+| Lucide React | Interface icons |
+| PCD | Local point-cloud data format |
+
+## 4. Project Structure
 
 ```text
-insight-io-dashboard/
+insight-io-robotics-dashboard/
 ├── index.html
 ├── package.json
+├── package-lock.json
 ├── public/
 │   ├── data/
 │   │   └── warehouse-scan.pcd
@@ -80,37 +99,148 @@ insight-io-dashboard/
         └── PointCloudView.jsx
 ```
 
-`CameraPanel.jsx` is retained as a reusable camera-panel component from the starter iteration. The current immersive layout renders the camera feed inside the primary view or as a picture-in-picture preview.
+## 5. Installation and Local Setup
 
-## Architecture and implementation notes
+### Prerequisites
 
-- **React + Vite** provide the component model and local development server.
-- **CSS + inline SVG** draw the lightweight, responsive occupancy-map illustration and UI overlays.
-- **Three.js** renders the `.pcd` point cloud in 3D; `OrbitControls` enables rotation and zoom.
-- **Local static assets** keep the sample video and point-cloud data bundled with the project.
-- Mission, mode and emergency-stop controls are client-side simulation state. They should not be represented as real robot telemetry.
-- The included point-cloud parser supports ASCII PCD files with `x`, `y`, and `z` fields. Binary/compressed PCD files need conversion or a more capable parser.
+- Node.js (Node 20 LTS recommended).
+- npm.
+- A modern browser with WebGL support.
 
-## Demo capture for submission
+### Step 1 — Clone the repository
 
-After running the app locally, capture a screen recording showing at least:
+```bash
+git clone https://github.com/Pavanrr25/insight-io-robotics-dashboard.git
+```
 
-1. The map view and camera picture-in-picture.
-2. Switching to the full camera view.
-3. Switching to the 3D point-cloud mode and rotating the cloud.
-4. Toggling Auto / Manual, pausing/resuming the mission, and activating Emergency Stop.
+### Step 2 — Open the project directory
 
-Save the capture into the repository (for example, `docs/demo.mp4`) and link it from the public GitHub repository. Use your own screen recording from the running build so it accurately reflects the submitted code.
+```bash
+cd insight-io-robotics-dashboard
+```
 
-## Submission checklist
+### Step 3 — Install dependencies
 
-- [ ] `npm install` succeeds on a clean machine.
-- [ ] `npm run build` succeeds.
-- [ ] Sample MP4 and PCD files are present in `public/`.
-- [ ] Desktop and mobile layouts have been checked.
-- [ ] Screenshots or a short demo recording are added.
-- [ ] Repository is public and README setup instructions are easy to follow.
+```bash
+npm install
+```
 
-## License / sample assets
+### Step 4 — Start the development server
 
-This is an assignment/demo project. Confirm the usage and redistribution terms of any replacement camera footage or point-cloud datasets before committing them to a public repository.
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite in your browser. The default address is usually:
+
+```text
+http://localhost:5173
+```
+
+### Step 5 — Create a production build
+
+```bash
+npm run build
+```
+
+### Step 6 — Preview the production build
+
+```bash
+npm run preview
+```
+
+## 6. Implementation Approach
+
+### Component-Based Architecture
+
+The application uses React components to organize the main dashboard and specialized visualization elements.
+
+- `App.jsx` manages the main dashboard layout, navigation, view selection and simulated control states.
+- `CameraPanel.jsx` contains the camera interface implementation.
+- `PointCloudView.jsx` handles Three.js scene creation, PCD parsing and point-cloud rendering.
+- `styles.css` contains the dashboard's visual styling and responsive layout.
+- `main.jsx` initializes the React application.
+
+### 3D Point-Cloud Rendering
+
+Three.js is used to create a browser-based 3D scene. The application reads the ASCII PCD data, extracts the X, Y and Z coordinates, and uses those coordinates to render the point cloud.
+
+The visualization supports interactive scene navigation through OrbitControls.
+
+### Camera Simulation
+
+The camera interface uses a locally hosted video asset. This allows the dashboard to demonstrate camera playback without requiring an external video-streaming service.
+
+### Mission Controls
+
+Mission and robot controls are implemented using React state. They demonstrate interface behavior, including mode switching, mission pause/resume and emergency-stop status changes.
+
+They are not connected to real robot hardware.
+
+## 7. Design and Architecture Decisions
+
+1. **React:** Selected to organize the dashboard into reusable and maintainable components.
+2. **Vite:** Used for a lightweight development workflow and production builds.
+3. **Three.js:** Selected to render interactive 3D point-cloud data directly in the browser.
+4. **Local Assets:** The sample camera video and point-cloud data are served from the project itself, avoiding external runtime asset dependencies.
+5. **Frontend Simulation:** Mission controls and telemetry are simulated to demonstrate dashboard interactions without requiring a robotics backend.
+
+## 8. Current Scope and Limitations
+
+This submission focuses on the frontend dashboard and visualization experience.
+
+The current implementation:
+
+- Uses a local sample video rather than a live camera stream.
+- Uses a local PCD dataset rather than a live LiDAR sensor.
+- Supports ASCII PCD parsing, not binary or compressed PCD.
+- Simulates robot controls, mission status and telemetry.
+- Does not include ROS/ROS2 communication or physical robot control.
+- Does not include a backend or persistent mission-management service.
+
+ROS/ROS2 integration, live sensor data and real robot control could be developed as future extensions.
+
+## 9. Demo and Screenshots
+
+The following sequence can be used to demonstrate the implementation:
+
+1. Show the main warehouse dashboard.
+2. Demonstrate the camera view and video playback.
+3. Open the 3D point-cloud view and rotate the scene.
+4. Demonstrate Auto/Manual mode switching.
+5. Demonstrate mission pause/resume.
+6. Demonstrate the emergency-stop interface state.
+7. Show the responsive layout.
+
+Suggested screenshot folder:
+
+```text
+docs/
+├── dashboard-map.png
+├── camera-view.png
+└── point-cloud-view.png
+```
+
+Add actual screenshots or a recorded demo only after capturing them.
+
+## 10. Deployment
+
+The application is deployed as a static frontend using Vercel.
+
+**Build command:** `npm run build`  
+**Output directory:** `dist`
+
+The `public/data` and `public/media` assets are included in the deployed project.
+
+**Live Demo:** https://insight-io-robotics-dashboard.vercel.app
+
+---
+
+## 11. Developer Information
+
+- **Full Name:** Pavan Rajaram Rathod
+- **GitHub Username:** Pavanrr25
+
+---
+
+**Developed as part of the ERIC Robotics Full Stack Developer Assessment.**
